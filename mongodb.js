@@ -8,7 +8,7 @@ const dbName = "myTaskManager";
 MongoClient.connect(connectionURL, { useNewUrlParser: true }, (err, client) => {
   assert.equal(null, err);
   const db = client.db(dbName);
-  console.log("connected succsel");
+  console.log("connected succsessfully");
 
   const collection = db.collection("users");
   //   collection.insertOne(
@@ -113,4 +113,9 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true }, (err, client) => {
     .deleteMany({ age: { $lt: 18 } })
     .then((result) => result)
     .catch((error) => console.log(error));
+
+  db.collection("tasks").deleteMany({ feedDog: "not yet" });
+  db.collection("users")
+    .insertOne({ name: "Marc", age: 49, country: "Canada" })
+    .then((result) => console.log(result).catch((error) => console.log));
 });

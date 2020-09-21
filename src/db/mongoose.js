@@ -1,35 +1,174 @@
 const mongoose = require("mongoose");
+const validator = require("validator");
+
 mongoose.connect("mongodb://127.0.0.1:27017/task-manager-api", {
   useNewUrlParser: true,
   useCreateIndex: true,
   useUnifiedTopology: true,
 });
 
-const User = mongoose.model("User", {
-  name: {
+// const User = mongoose.model("User", {
+//   name: {
+//     type: String,
+//     required: true,
+//   },
+//   age: {
+//     type: Number,
+//     validate(value) {
+//       if (value < 0) {
+//         throw new Error("age cannot be negative");
+//       }
+//     },
+//   },
+//   country: {
+//     type: String,
+//     trim: true,
+//   },
+//   password: {
+//     type: String,
+//     required: true,
+//     minLength: 7,
+//     trim: true,
+//     lowercase: true,
+//     validate(value) {
+//       if (value.toLowerCase().includes("password")) {
+//         throw new Error("Bu xing");
+//       }
+//     },
+//   },
+
+//   email: {
+//     type: String,
+//     validate(value) {
+//       if (!validator.isEmail(value)) {
+//         throw new Error("Email is invalid");
+//       }
+//     },
+//   },
+// });
+
+// const dog2 = new User({
+//   name: "Happy Alma",
+//   age: 42,
+//   password: "inHeavenPassword",
+// });
+
+// dog2.save().catch((error) => console.log(error));
+
+// const bestFriend = new User({
+//   name: "JB",
+//   age: 49,
+//   email: "jb$@dlld.net",
+//   password: "#56!ddo6",
+// });
+
+// bestFriend
+//   .save()
+//   .then(() => console.log(bestFriend))
+//   .catch((err) => console.log(err));
+
+// const brother = User({
+//   name: "Ryan",
+//   age: 28,
+//   password: "ddi333434  ",
+// });
+
+// brother
+//   .save()
+//   .then(() => console.log(brother))
+//   .catch((error) => console.log(error));
+
+// const sister = new User({
+//   name: "Sarah",
+//   age: 31,
+//   password: "mypassword",
+// });
+
+// sister
+//   .save()
+//   .then((sister) => console.log(sister))
+//   .catch((error) => console.log(error));
+
+// User.deleteOne({ name: "Ryan" }, (error) => console.log(error));
+
+// // const dog = new User({
+// //   name: "Toby",
+// //   age: 2,
+// //   password: "1234",
+// //   email: "tos",
+// // });
+
+// // dog
+// //   .save()
+// //   .then(() => console.log(dog))
+// //   .catch((err) => console.log(err));
+// // const friend = new User({
+// //   name: "Stacey",
+// //   age: 38,
+// //   password: "   eere4   ",
+// // });
+// // friend.save();
+
+// // const cousin = new User({
+// //   age: 39,
+// //   password: "343hiejrw",
+// // });
+// // cousin.save().catch((err) => console.log(err));
+// // const me = new User({
+// //   name: "Jay",
+// //   age: 32,
+// //   country: "Korea",
+// // });
+
+// // me.save()
+// //   .then((me) => {
+// //     console.log(me);
+// //   })
+// //   .catch((error) => {
+// //     console.log("Error", error);
+// //   });
+
+// User.findByIdAndDelete("5f64e62671de2c8802a41ee2").then(() =>
+//   console.log("deleted??")
+// );
+
+const taskSchema = new mongoose.Schema({
+  description: {
     type: String,
+    trim: true,
   },
-  age: {
-    type: Number,
-  },
-  country: {
-    type: String,
+  completed: {
+    type: Boolean,
+    required: false,
+    default: false,
   },
 });
 
-const me = new User({
-  name: "Jay",
-  age: 32,
-  country: "Korea",
-});
+const Task = mongoose.model("Task", taskSchema);
 
-me.save()
-  .then((me) => {
-    console.log(me);
-  })
-  .catch((error) => {
-    console.log("Error", error);
-  });
+const mondayTask = new Task({ completed: false, description: "study 8 hours" });
+mondayTask
+  .save()
+  .then(() => console.log("done"))
+  .catch((err) => console.log(err));
+// const todayTask = new Task({
+//   description: "Take T to clinic",
+//   completed: false,
+// });
+
+// todayTask
+//   .save()
+//   .then(() => console.log(todayTask))
+//   .catch((error) => console.log("Error: ", error));
+
+// const deleteTaskAndCount = async (id) => {
+//   const first = await Task.findByIdAndDelete(id);
+//   const count = await Task.countDocuments({ completed: { $eq: false } });
+//   return first;
+// };
+// deleteTaskAndCount("5f65173980617c8acad1eb4d")
+//   .then((r) => console.log(r))
+//   .catch((e) => console.log(e));
 
 // const db = mongoose.connection;
 // db.on("error", console.error.bind(console, "connection error:"));
