@@ -8,23 +8,25 @@ const port = process.env.PORT || 3000;
 
 app.use("/", express.json());
 
-app.get("/tasks", (req, res) => {
-  Task.find({})
-    .then((tasks) => res.status(200).send(tasks))
-    .catch((err) => res.status(500).send(err));
+app.get("/tasks", async (req, res) => {
+  try {
+    const allTasks = await Task.find({});
+    res.status(200).send(allTasks);
+  } catch (e) {
+    res.status(500).send(e);
+  }
 });
 
-app.get("/tasks/:id", (req, res) => {
-  Task.findOne({ _id: { $eq: req.params.id } })
-    .then((task) => {
-      if (!task) {
-        return res
-          .status(404)
-          .send("we couldn't find what you were looking for");
-      }
-      res.send(task);
-    })
-    .catch((error) => res.send(error));
+app.get("/tasks/:id", async (req, res) => {
+  try {
+    const task = await Task.findById(req.params.id);
+    if (!task) {
+      res.status(404).send("task doesn't exist");
+    }
+    res.status(200).send(task);
+  } catch (e) {
+    res.status(500).send();
+  }
 });
 
 app.get("/users", (req, res) => {
@@ -54,16 +56,27 @@ app.post("/tasks", (req, res) => {
     });
 });
 
-app.post("/users", (req, res) => {
-  let user = new User(req.body);
-  user
-    .save()
-    .then(() => res.status(200).send(user))
-    .catch((err) => {
-      res.status(500);
-      res.send(err);
-    });
+// app.post("/users", (req, res) => {
+//   let user = new User(req.body);
+//   user
+//     .save()
+//     .then(() => res.status(200).send(user))
+//     .catch((err) => {
+//       res.status(500);
+//       res.send(err);
+//     });
+// });
+
+app.post("/users", async (req, res) => {
+  const user = new User(req.body);
+  try {
+    await user.save();
+    res.status(200).send(user);
+  } catch (e) {
+    res.status(500).send(e);
+  }
 });
+
 app.listen(port, () => {
   console.log(`Task-manager app listening on port ${port}`);
 });
